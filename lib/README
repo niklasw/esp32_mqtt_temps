@@ -1,0 +1,106 @@
+
+This directory is intended for project specific (private) libraries.
+PlatformIO will compile them to static libraries and link into executable file.
+
+The source code of each library should be placed in a an own separate directory
+("lib/your_library_name/[here are source files]").
+
+For example, see a structure of the following two libraries `Foo` and `Bar`:
+
+|--lib
+|  |
+|  |--Bar
+|  |  |--docs
+|  |  |--examples
+|  |  |--src
+|  |     |- Bar.c
+|  |     |- Bar.h
+|  |  |- library.json (optional, custom build options, etc) https://docs.platformio.org/page/librarymanager/config.html
+|  |
+|  |--Foo
+|  |  |- Foo.c
+|  |  |- Foo.h
+|  |
+|  |- README --> THIS FILE
+|
+|- platformio.ini
+|--src
+   |- main.c
+
+and a contents of `src/main.c`:
+```
+#include <Foo.h>
+#include <Bar.h>
+
+int main (void)
+{
+  ...
+}
+
+```
+
+PlatformIO Library Dependency Finder will find automatically dependent
+libraries scanning project source files.
+
+More information about PlatformIO Library Dependency Finder
+- https://docs.platformio.org/page/librarymanager/ldf.html
+
+
+MQTT example:
+/*
+ Example of using a Stream object to store the message payload
+
+ Uses SRAM library: https://github.com/ennui2342/arduino-sram
+ but could use any Stream based class such as SD
+
+  - connects to an MQTT server
+  - publishes "hello world" to the topic "outTopic"
+  - subscribes to the topic "inTopic"
+*/
+
+#include <SPI.h>
+#include <Ethernet.h>
+#include <PubSubClient.h>
+#include <SRAM.h>
+
+// Update these with values suitable for your network.
+byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0xED };
+IPAddress ip(172, 16, 0, 100);
+IPAddress server(172, 16, 0, 2);
+
+SRAM sram(4, SRAM_1024);
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  sram.seek(1);
+
+  // do something with the message
+  for(uint8_t i=0; i<length; i++) {
+    Serial.write(sram.read());
+  }
+  Serial.println();
+
+  // Reset position for the next message to be stored
+  sram.seek(1);
+}
+
+EthernetClient ethClient;
+PubSubClient client(server, 1883, callback, ethClient, sram);
+
+void setup()
+{
+  Ethernet.begin(mac, ip);
+  if (client.connect("arduinoClient")) {
+    client.publish("outTopic","hello world");
+    client.subscribe("inTopic");
+  }
+
+  sram.begin();
+  sram.seek(1);
+
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  client.loop();
+}
