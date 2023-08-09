@@ -1,0 +1,5 @@
+#define CONTROLLER_ID 1
+#define BAUD 9600
+#define ESSID "xxxxxxxxx"
+#define WEP_KEY "xxxxxxxx"
+
