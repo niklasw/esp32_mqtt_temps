@@ -1,6 +1,12 @@
-/* Copy this file to config.h and insert ESSID and WEP_KEY*/
+/* 
+Copy this file to config.h and insert ESSID, WEP_KEY
+and mqtt server settings
+*/
+
 #define CONTROLLER_ID 1
 #define BAUD 9600
 #define ESSID "xxxxxxxxx"
 #define WEP_KEY "xxxxxxxx"
-
+#define MQTT_SERVER 192,168,xx,xx  // Use commas and no white space
+                                   // ...see mqtt.h
+#define MQTT_PORT 1883                        

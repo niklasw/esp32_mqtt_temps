@@ -1,9 +1,9 @@
 #include <PubSubClient.h>
 #include <stdio.h>
 
-IPAddress server(192, 168, 10, 200);
+IPAddress server(MQTT_SERVER);
 WiFiClient interface;
-PubSubClient mqtt_client(server, 1883, interface);
+PubSubClient mqtt_client(server, MQTT_PORT, interface);
 
 const char mqtt_topic[] = "sensors/T/esp32/1";
 
@@ -48,7 +48,7 @@ void mqtt_pub(const uint8_t index, const char* address, const float value) {
 
     if (value > -100) {
       char message[100];
-      mqtt_mk_message(index, address, value message);
+      mqtt_mk_message(index, address, value, message);
       mqtt_client.publish(topic, message);
     } else {
       mqtt_client.publish(topic, "offline");
