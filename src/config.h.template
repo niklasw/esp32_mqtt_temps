@@ -1,3 +1,4 @@
+/* Copy this file to config.h and insert ESSID and WEP_KEY*/
 #define CONTROLLER_ID 1
 #define BAUD 9600
 #define ESSID "xxxxxxxxx"
