@@ -16,12 +16,12 @@ sensorAddressArray t_sensor_addresses;
 void format_sensor_address(uint8_t array[8], char* result)
 {
     sprintf(result, "%02X", array[0]);
-
     for (int i = 1; i < 8; i++) {
         char temp[3];
         sprintf(temp, ":%02X", array[i]);
         strcat(result, temp);
     }
+    strcat(result, "\0");
 }
 
 void get_sensor_addresses(DallasTemperature& sensors, const uint8_t n_sensors,
@@ -37,29 +37,29 @@ void get_sensor_addresses(DallasTemperature& sensors, const uint8_t n_sensors,
             strcpy(addresses[i], address_string);
         }
 
-        Serial.print("sensor address = ");
+        Serial.print("  sensor address = ");
         Serial.print(address_string);
         Serial.println("");
     }
 }
 
-uint8_t setup_sensors()
+void setup_sensors()
 {
-    Serial.println("Setting up sensors.");
+    Serial.println("Setting up sensors");
     sensors.begin();
-    delay(10);
+    delay(100);
     static const uint8_t n_sensors = sensors.getDeviceCount();
+    Serial.printf("  number of sensors found: %i\n", n_sensors);
     n_sensors_ptr = &n_sensors;
     get_sensor_addresses(sensors, n_sensors, t_sensor_addresses);
-    return n_sensors;
+    Serial.println("  sensors ready");
 }
 
 const int n_sensors()
 {
-    if (n_sensors_ptr) {
+    if (n_sensors_ptr && *n_sensors_ptr > 0) {
         return *n_sensors_ptr;
     }
-    Serial.println("No sensors found.");
     return 0;
 }
 

@@ -11,3 +11,4 @@ and mqtt server settings
                                    // ...see mqtt.h
 #define MQTT_PORT 1883                        
 #define MQTT_TOPIC "sensors/T/esp32/1"
+#define LOOP_PERIOD 30
