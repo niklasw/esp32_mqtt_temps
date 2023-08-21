@@ -18,7 +18,6 @@ class TSensors
 private:
     OneWire _w1;
     uint8_t _nSensors;
-    uint8_t _rawAddresses[MAX_SENSORS];
     SensorAddressArray _addresses;
 
     String formatAddress(const uint8_t rawAddr[]);
@@ -35,6 +34,10 @@ public:
     const String& address(uint8_t i) const;
 
     float temperature(uint8_t i);
+
+    void info();
+
+    void info(uint8_t i);
 };
 
 #endif
