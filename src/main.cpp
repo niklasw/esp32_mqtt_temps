@@ -5,6 +5,7 @@
 #include "config.h"
 #include "mqtt.h"
 #include "TSensors.h"
+#include "MyMQTT.h"
 
 int count = 0;
 
