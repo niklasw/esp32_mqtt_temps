@@ -5,6 +5,7 @@ and mqtt server settings
 
 #define CONTROLLER_ID "1"
 #define BAUD 9600
+#define ONE_WIRE_BUS 2
 #define ESSID "xxxxxxxxx"
 #define WEP_KEY "xxxxxxxx"
 #define MQTT_SERVER 192,168,xx,xx  // Use commas and no white space

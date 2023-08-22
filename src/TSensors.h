@@ -6,7 +6,6 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#define ONE_WIRE_BUS 2
 #define MAX_SENSORS 5
 #define ADDR_LENGTH 24
 

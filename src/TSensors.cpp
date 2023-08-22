@@ -70,7 +70,7 @@ void TSensors::info()
 
 void TSensors::info(uint8_t i)
 {
-    Serial.printf("Sensor %s ", address(i));
+    Serial.printf("Sensor %s ", address(i).c_str());
     Serial.printf("temperature (device %d) = ", i);
     Serial.println(temperature(i));
 }
