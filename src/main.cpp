@@ -3,7 +3,6 @@
 #include <OneWire.h>
 #include "mywifi.h"
 #include "config.h"
-#include "mqtt.h"
 #include "TSensors.h"
 #include "MyMQTT.h"
 
