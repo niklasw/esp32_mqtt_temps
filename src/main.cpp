@@ -10,27 +10,34 @@
 int count = 0;
 
 TSensors* tsPtr;
+MyMQTT* mqttPtr;
+TSensors& ts = *tsPtr;
+MyMQTT& mqtt = *mqttPtr;
 
 void setup(void)
 {
     Serial.begin(BAUD);
     setup_wifi(ESSID, WEP_KEY);
-    mqtt_setup();
+
+    IP_t ip({MQTT_SERVER});
+    String topic(MQTT_TOPIC);
+    mqttPtr = new MyMQTT(ip, MQTT_PORT, topic);
 
     tsPtr = new TSensors(ONE_WIRE_BUS);
+
+    tsPtr->mkTopics(MQTT_TOPIC, CONTROLLER_ID);
 }
 
 void loop(void)
 {
-    tsPtr->info();
+    ts.info();
 
-    tsPtr->requestTemperatures();
+    ts.requestTemperatures();
 
-    if (tsPtr->nSensors() > 0) {
-        for (int i=0; i<tsPtr->nSensors(); i++) {
-            mqtt_pub(i, tsPtr->address(i).c_str(), tsPtr->temperature(i));
-            tsPtr->info(i);
-        }
+    for (int i=0; i<ts.nSensors(); i++)
+    {
+        mqtt.publish(ts.topic(i), ts.mkMessage(i));
+        ts.info(i);
     }
 
     Serial.println("Sleeping");

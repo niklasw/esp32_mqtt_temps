@@ -58,3 +58,10 @@ void mqtt_pub(const uint8_t index, const char* address, const float value)
         mqtt_client.publish(topic, "offline");
     }
 }
+
+void mqtt_pub(const String& topic, const String& message)
+{
+    mqtt_reconnect();
+    mqtt_client.loop();
+    mqtt_client.publish(topic.c_str(), message.c_str());
+}

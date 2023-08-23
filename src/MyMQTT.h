@@ -16,16 +16,18 @@ private:
 
     WiFiClient _interface;
 
-    String _baseTopic;
+    String _topic;
 
-    const char* _identity;
+    const String _identity;
 
 public:
     MyMQTT(IP_t ip, int port, String topic);
 
     void reconnect();
 
-    String mkTopic(const Array<String, 4> subTopics);
+    const String& topic() const;
+
+    void publish(const String& topic, const String& message);
 };
 
 #endif
