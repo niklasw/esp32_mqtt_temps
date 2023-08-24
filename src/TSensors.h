@@ -27,7 +27,7 @@ private:
 public:
     TSensors(uint8_t pin);
 
-    void mkTopics(const String& baseTopic, const String& id);
+    void mkTopics(const String& baseTopic);
 
     String mkMessage(uint8_t i);
 
@@ -36,6 +36,8 @@ public:
     const SensorAddressArray& addresses() const;
 
     const String& address(uint8_t i) const;
+
+    const SensorAddressArray& topics() const;
 
     const String& topic(uint8_t i) const;
 

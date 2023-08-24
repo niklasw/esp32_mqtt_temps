@@ -39,5 +39,8 @@ void MyMQTT::publish(const String& topic, const String& message)
 {
     this->reconnect();
     this->loop();
+    Serial.println(topic.c_str());
+    Serial.println(message.c_str());
+    delay(1000);
     this->publish(topic.c_str(), message.c_str());
 };

@@ -20,6 +20,7 @@ String TSensors::formatAddress(const uint8_t rawAddr[])
 
 void TSensors::collectAddresses()
 {
+    Serial.println("Collecting sensor addresses");
     for (uint8_t i=0; i < _nSensors; i++)
     {
         uint8_t address[8];
@@ -40,15 +41,20 @@ TSensors::TSensors(uint8_t pin)
     delay(100);
     _nSensors = this->getDeviceCount();
     collectAddresses();
+
+    for(int i=0; i< _nSensors; i++)
+    {
+        Serial.printf("  address: %s\n", this->address(i).c_str());
+    }
 }
 
-void TSensors::mkTopics(const String& baseTopic, const String& id)
+void TSensors::mkTopics(const String& baseTopic)
 {
-    for(const String& a: _addresses)
+    for(int i=0; i< _nSensors; i++)
     {
         char addr[100];
-        sprintf(addr, "%s/%s/%s\0", baseTopic.c_str(), id.c_str(), a.c_str());
-        _topics.push_back(String(addr));
+        sprintf(addr, "%s/%s", baseTopic.c_str(), _addresses[i].c_str());
+        _topics[i] = String(addr);
     }
 }
 
@@ -58,8 +64,8 @@ String TSensors::mkMessage(uint8_t i)
     {
         char message[100];
         const char fmt[] =
-            "{\"index\":%d, \"address\": \"%s\", \"value\":%0.1f}\0";
-        sprintf(message, fmt, i, this->address(i), this->temperature(i));
+            "{\"index\":%d, \"address\": \"%s\", \"value\":%0.1f}";
+        sprintf(message, fmt, i, this->address(i).c_str(), this->temperature(i));
         return String(message);
     }
     return String("offline");
@@ -78,6 +84,11 @@ const SensorAddressArray& TSensors::addresses() const
 const String& TSensors::address(uint8_t i) const
 {
     return _addresses[i];
+}
+
+const SensorAddressArray& TSensors::topics() const
+{
+    return _topics;
 }
 
 const String& TSensors::topic(uint8_t i) const

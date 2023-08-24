@@ -10,8 +10,6 @@ int count = 0;
 
 TSensors* tsPtr;
 MyMQTT* mqttPtr;
-TSensors& ts = *tsPtr;
-MyMQTT& mqtt = *mqttPtr;
 
 void setup(void)
 {
@@ -24,19 +22,27 @@ void setup(void)
 
     tsPtr = new TSensors(ONE_WIRE_BUS);
 
-    tsPtr->mkTopics(MQTT_TOPIC, CONTROLLER_ID);
+    tsPtr->mkTopics(MQTT_TOPIC);
+
+    for (const String& t: tsPtr->topics())
+    {
+        Serial.printf("Topic: ");
+        Serial.println(t);
+    }
 }
 
 void loop(void)
 {
-    ts.info();
+    tsPtr->info();
 
-    ts.requestTemperatures();
+    tsPtr->requestTemperatures();
 
-    for (int i=0; i<ts.nSensors(); i++)
+    for (int i=0; i<tsPtr->nSensors(); i++)
     {
-        mqtt.publish(ts.topic(i), ts.mkMessage(i));
-        ts.info(i);
+        // mqttPtr->publish(tsPtr->topic(i), tsPtr->mkMessage(i));
+        mqttPtr->publish(String("sensors/T/esp32/2/T"), String("apa"));
+
+        tsPtr->info(i);
     }
 
     Serial.println("Sleeping");
