@@ -6,16 +6,17 @@
 
 String TSensors::formatAddress(const uint8_t rawAddr[])
 {
-    char tmp[3];
+    char tmp[4];
+    char addr[25];
     sprintf(tmp, "%02X", rawAddr[0]);
-    String out(tmp);
+    strcat(addr, tmp);
 
     for (uint8_t i=1; i<8; i++)
     {
         sprintf(tmp, ":%02X", rawAddr[i]);
-        out.concat(tmp);
+        strcat(addr, tmp);
     }
-    return out;
+    return String(addr);
 }
 
 void TSensors::collectAddresses()

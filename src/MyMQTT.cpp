@@ -1,7 +1,7 @@
 
 #include "MyMQTT.h"
 
-MyMQTT::MyMQTT(IP_t ip, int port, String topic)
+MyMQTT::MyMQTT(IP_t ip, int port, const char topic[])
 :
     _server(ip[0], ip[1], ip[2], ip[3]),
     _interface(),
@@ -41,6 +41,6 @@ void MyMQTT::publish(const String& topic, const String& message)
     this->loop();
     Serial.println(topic.c_str());
     Serial.println(message.c_str());
-    delay(1000);
-    this->publish(topic.c_str(), message.c_str());
+    // this->publish(topic.c_str(), message.c_str());
+    this->publish("sensors/a", "hej");
 };

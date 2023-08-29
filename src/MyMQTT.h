@@ -21,7 +21,7 @@ private:
     const String _identity;
 
 public:
-    MyMQTT(IP_t ip, int port, String topic);
+    MyMQTT(IP_t ip, int port, const char topic[]);
 
     void reconnect();
 

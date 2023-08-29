@@ -17,8 +17,7 @@ void setup(void)
     setup_wifi(ESSID, WEP_KEY);
 
     IP_t ip({MQTT_SERVER});
-    String topic(MQTT_TOPIC);
-    mqttPtr = new MyMQTT(ip, MQTT_PORT, topic);
+    mqttPtr = new MyMQTT(ip, MQTT_PORT, MQTT_TOPIC);
 
     tsPtr = new TSensors(ONE_WIRE_BUS);
 
@@ -40,12 +39,17 @@ void loop(void)
     for (int i=0; i<tsPtr->nSensors(); i++)
     {
         // mqttPtr->publish(tsPtr->topic(i), tsPtr->mkMessage(i));
-        mqttPtr->publish(String("sensors/T/esp32/2/T"), String("apa"));
+        Serial.println(tsPtr->topic(i));
+        Serial.println(tsPtr->nSensors());
+        Serial.println(tsPtr->mkMessage(i).c_str());
+        Serial.println(sizeof(tsPtr->topic(i).c_str()));
+        Serial.println(sizeof(tsPtr->mkMessage(i).c_str()));
+        mqttPtr->publish(String("sensors/T/esp32/2/test"), String("apa"));
 
         tsPtr->info(i);
     }
 
     Serial.println("Sleeping");
 
-    delay(LOOP_PERIOD*1000);
+    delay(LOOP_PERIOD*1);
 }
