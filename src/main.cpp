@@ -3,31 +3,22 @@
 #include <OneWire.h>
 #include "mywifi.h"
 #include "config.h"
+#include "mqtt.h"
 #include "TSensors.h"
-#include "MyMQTT.h"
 
 int count = 0;
 
+IPAddress server(MQTT_SERVER);
 TSensors* tsPtr;
-MyMQTT* mqttPtr;
 
 void setup(void)
 {
     Serial.begin(BAUD);
     setup_wifi(ESSID, WEP_KEY);
-
-    IP_t ip({MQTT_SERVER});
-    mqttPtr = new MyMQTT(ip, MQTT_PORT, MQTT_TOPIC);
+    mqtt_setup(server, MQTT_PORT);
 
     tsPtr = new TSensors(ONE_WIRE_BUS);
-
     tsPtr->mkTopics(MQTT_TOPIC);
-
-    for (const String& t: tsPtr->topics())
-    {
-        Serial.printf("Topic: ");
-        Serial.println(t);
-    }
 }
 
 void loop(void)
@@ -36,20 +27,16 @@ void loop(void)
 
     tsPtr->requestTemperatures();
 
-    for (int i=0; i<tsPtr->nSensors(); i++)
+    if (tsPtr->nSensors() > 0)
     {
-        // mqttPtr->publish(tsPtr->topic(i), tsPtr->mkMessage(i));
-        Serial.println(tsPtr->topic(i));
-        Serial.println(tsPtr->nSensors());
-        Serial.println(tsPtr->mkMessage(i).c_str());
-        Serial.println(sizeof(tsPtr->topic(i).c_str()));
-        Serial.println(sizeof(tsPtr->mkMessage(i).c_str()));
-        mqttPtr->publish(String("sensors/T/esp32/2/test"), String("apa"));
-
-        tsPtr->info(i);
+        for (int i=0; i<tsPtr->nSensors(); i++)
+        {
+            mqtt_pub(tsPtr->topic(i).c_str(), tsPtr->mkMessage(i).c_str());
+            tsPtr->info(i);
+        }
     }
 
     Serial.println("Sleeping");
 
-    delay(LOOP_PERIOD*1);
+    delay(LOOP_PERIOD*1000);
 }
