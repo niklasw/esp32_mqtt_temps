@@ -6,7 +6,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#define MAX_SENSORS 5
+#define MAX_SENSORS 8
 #define ADDR_LENGTH 24
 
 typedef Array<String, MAX_SENSORS> SensorAddressArray;

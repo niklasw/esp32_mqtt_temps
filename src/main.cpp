@@ -29,7 +29,8 @@ void loop(void)
 
     if (tsPtr->nSensors() > 0)
     {
-        for (int i=0; i<tsPtr->nSensors(); i++)
+        keep_wifi_connected();
+        for (int i=0; i < tsPtr->nSensors(); i++)
         {
             mqtt_pub(tsPtr->topic(i).c_str(), tsPtr->mkMessage(i).c_str());
             tsPtr->info(i);

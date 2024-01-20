@@ -1,5 +1,14 @@
 #include <WiFi.h>
 
+void keep_wifi_connected()
+{
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.println("WiFi lost. Reconnecting");
+        WiFi.reconnect();
+    }
+}
+
 void setup_wifi(const char* ssid, const char* password)
 {
     delay(10);
